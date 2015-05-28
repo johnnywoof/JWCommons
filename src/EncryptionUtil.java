@@ -5,10 +5,10 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.*;
 
 /**
- * The EncryptionUtil class.<br/>
+ * The me.johnnywoof.EncryptionUtil class.<br/>
  * Example usage:<br/>
  * <code>
- * EncryptionUtil encryptionUtil = new EncryptionUtil();<br/>
+ * me.johnnywoof.EncryptionUtil encryptionUtil = new me.johnnywoof.EncryptionUtil();<br/>
  * <p/>
  * String text = "hello world";<br/>
  * <p/>
@@ -38,10 +38,10 @@ public class EncryptionUtil {
 	private Cipher decryptionCipher;
 
 	/**
-	 * Creates a new EncryptionUtil instance.<br/>
+	 * Creates a new me.johnnywoof.EncryptionUtil instance.<br/>
 	 * The method does the following below:<br/>
 	 * <code>
-	 * new EncryptionUtil("RSA", 2048)
+	 * new me.johnnywoof.EncryptionUtil("RSA", 2048)
 	 * </code>
 	 *
 	 * @see EncryptionUtil#EncryptionUtil(String, int)
@@ -51,7 +51,7 @@ public class EncryptionUtil {
 	}
 
 	/**
-	 * Creates a new EncryptionUtil instance.
+	 * Creates a new me.johnnywoof.EncryptionUtil instance.
 	 *
 	 * @param algorithm The encryption algorithm to use.
 	 * @param bits      The amount of bits the algorithm should use.
@@ -115,7 +115,7 @@ public class EncryptionUtil {
 	}
 
 	/**
-	 * Creates a new EncryptionUtil instance based on an existing key pair.
+	 * Creates a new me.johnnywoof.EncryptionUtil instance based on an existing key pair.
 	 *
 	 * @param keyPair The key pair to use.
 	 * @throws IllegalArgumentException If the keys in the key pair do not use the same algorithm.

@@ -6,14 +6,14 @@ import java.net.URL;
 import java.util.Random;
 
 /**
- * The TrueRandom class uses the random.org API in order to generate true randomness.
+ * The me.johnnywoof.TrueRandom class uses the random.org API in order to generate true randomness.
  */
 public class TrueRandom extends Random {
 
 	private final String userAgent;
 
 	/**
-	 * Creates a new TrueRandom instance.
+	 * Creates a new me.johnnywoof.TrueRandom instance.
 	 *
 	 * @see TrueRandom#TrueRandom(String)
 	 */
@@ -22,7 +22,7 @@ public class TrueRandom extends Random {
 	}
 
 	/**
-	 * Creates a new TrueRandom instance with an email address in it.<br/>
+	 * Creates a new me.johnnywoof.TrueRandom instance with an email address in it.<br/>
 	 * The email is recommended so that the guys at random.org may contact you in case their guidelines are violated.<br/>
 	 * See more: https://www.random.org/clients/
 	 *
