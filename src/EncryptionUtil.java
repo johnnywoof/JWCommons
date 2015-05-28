@@ -34,10 +34,8 @@ public class EncryptionUtil {
 	 */
 	public final PrivateKey privateKey;
 
-	/**
-	 * The cipher.
-	 */
-	private final Cipher cipher;
+	private Cipher encryptionCipher;
+	private Cipher decryptionCipher;
 
 	/**
 	 * Creates a new EncryptionUtil instance.<br/>
@@ -58,6 +56,7 @@ public class EncryptionUtil {
 	 * @param algorithm The encryption algorithm to use.
 	 * @param bits      The amount of bits the algorithm should use.
 	 * @throws IllegalStateException If the KeyPairGenerator failed for any reason.
+	 * @throws IllegalStateException If the cipher failed to generate.
 	 */
 	public EncryptionUtil(String algorithm, int bits) {
 
@@ -82,11 +81,11 @@ public class EncryptionUtil {
 
 			try {
 
-				this.cipher = Cipher.getInstance(algorithm);
+				this.generateCiphers(this.privateKey.getAlgorithm());
 
-			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			} catch (NoSuchPaddingException | InvalidKeyException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
-				throw new IllegalStateException("Failed to create the cipher instance.");
+				throw new IllegalStateException("Failed to generate the cipher(s)!");
 			}
 
 		} else {
@@ -98,10 +97,29 @@ public class EncryptionUtil {
 	}
 
 	/**
+	 * Generates the ciphers.
+	 *
+	 * @param algorithm The algorithm to use.
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 */
+	private void generateCiphers(String algorithm) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+
+		this.encryptionCipher = Cipher.getInstance(algorithm);
+		this.decryptionCipher = Cipher.getInstance(algorithm);
+
+		this.encryptionCipher.init(Cipher.ENCRYPT_MODE, this.publicKey);
+		this.decryptionCipher.init(Cipher.DECRYPT_MODE, this.privateKey);
+
+	}
+
+	/**
 	 * Creates a new EncryptionUtil instance based on an existing key pair.
 	 *
 	 * @param keyPair The key pair to use.
 	 * @throws IllegalArgumentException If the keys in the key pair do not use the same algorithm.
+	 * @throws IllegalStateException If the cipher failed to generate.
 	 */
 	public EncryptionUtil(KeyPair keyPair) {
 
@@ -112,11 +130,11 @@ public class EncryptionUtil {
 
 			try {
 
-				this.cipher = Cipher.getInstance(this.privateKey.getAlgorithm());
+				this.generateCiphers(this.privateKey.getAlgorithm());
 
-			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			} catch (NoSuchPaddingException | InvalidKeyException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
-				throw new IllegalStateException("Failed to create the cipher instance.");
+				throw new IllegalStateException("Failed to generate the cipher(s)!");
 			}
 
 		} else {
@@ -137,11 +155,9 @@ public class EncryptionUtil {
 
 		try {
 
-			cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
+			return this.decryptionCipher.doFinal(encryptedData);
 
-			return cipher.doFinal(encryptedData);
-
-		} catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
+		} catch (IllegalBlockSizeException | BadPaddingException e) {
 			e.printStackTrace();
 		}
 
@@ -159,11 +175,9 @@ public class EncryptionUtil {
 
 		try {
 
-			cipher.init(Cipher.ENCRYPT_MODE, this.publicKey);
+			return this.encryptionCipher.doFinal(data);
 
-			return cipher.doFinal(data);
-
-		} catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
+		} catch (IllegalBlockSizeException | BadPaddingException e) {
 			e.printStackTrace();
 		}
 
