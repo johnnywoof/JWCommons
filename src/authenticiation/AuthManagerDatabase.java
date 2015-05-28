@@ -2,8 +2,14 @@ package authenticiation;
 
 public interface AuthManagerDatabase {
 
-	void storeAccount(String username, String hashedPassword);
+	void storeAccount(String username, byte[] hash, byte[] salt);
 
-	String getPasswordHash(String username);
+	void deleteAccount(String username);
+
+	boolean accountExists(String username);
+
+	byte[] getSalt(String username);
+
+	byte[] getPasswordHash(String username);
 
 }
