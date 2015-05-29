@@ -37,19 +37,22 @@ public class SocketManager {
 
 		for (Method m : this.packetListener.getClass().getMethods()) {
 
-			Class<?>[] params = m.getParameterTypes();
+			if (m.isAnnotationPresent(PacketReadHandler.class)) {
 
-			if (params.length == 1) {
+				Class<?>[] params = m.getParameterTypes();
 
-				//TODO Use something else than a string
-				if (params[0].getCanonicalName().equals(packet.getClass().getCanonicalName())) {
+				if (params.length == 1) {
 
-					try {
+					if (params[0].isInstance(packet)) {
 
-						m.invoke(packetListener, packet);
+						try {
 
-					} catch (IllegalAccessException | InvocationTargetException e) {
-						e.printStackTrace();
+							m.invoke(packetListener, packet);
+
+						} catch (IllegalAccessException | InvocationTargetException e) {
+							e.printStackTrace();
+						}
+
 					}
 
 				}
