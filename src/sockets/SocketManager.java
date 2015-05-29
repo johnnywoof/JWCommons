@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SocketManager {
 
@@ -16,10 +18,33 @@ public class SocketManager {
 	protected final PacketRegistrator packetRegistrator;
 
 	private final Object packetListener;
+	private final Method[] packetListenerMethods;
 
 	public SocketManager(Object packetListener, PacketRegistrator packetRegistrator, Socket socket) throws IOException {
 
 		this.packetListener = packetListener;
+
+		List<Method> methods = new ArrayList<>();
+
+		for (Method m : this.packetListener.getClass().getMethods()) {
+
+			if (m.isAnnotationPresent(PacketReadHandler.class)) {
+
+				Class<?>[] params = m.getParameterTypes();
+
+				if (params.length == 1) {
+
+					methods.add(m);
+
+				}
+
+			}
+
+		}
+
+		this.packetListenerMethods = methods.toArray(new Method[methods.size()]);
+
+		methods.clear();
 
 		this.socket = socket;
 		this.packetRegistrator = packetRegistrator;
@@ -35,26 +60,16 @@ public class SocketManager {
 
 	public void onReceivePacket(Packet packet) {
 
-		for (Method m : this.packetListener.getClass().getMethods()) {
+		for (Method m : this.packetListenerMethods) {
 
-			if (m.isAnnotationPresent(PacketReadHandler.class)) {
+			if (m.getParameterTypes()[0].isInstance(packet)) {
 
-				Class<?>[] params = m.getParameterTypes();
+				try {
 
-				if (params.length == 1) {
+					m.invoke(packetListener, packet);
 
-					if (params[0].isInstance(packet)) {
-
-						try {
-
-							m.invoke(packetListener, packet);
-
-						} catch (IllegalAccessException | InvocationTargetException e) {
-							e.printStackTrace();
-						}
-
-					}
-
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					e.printStackTrace();
 				}
 
 			}
