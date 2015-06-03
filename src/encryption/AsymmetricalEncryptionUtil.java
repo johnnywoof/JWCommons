@@ -25,7 +25,7 @@ import java.security.*;
  * System.out.println(new String(decrypted));<br/>
  * </code>
  */
-public class EncryptionUtil {
+public class AsymmetricalEncryptionUtil {
 
 	/**
 	 * The public key used for encryption.
@@ -36,8 +36,11 @@ public class EncryptionUtil {
 	 */
 	public final PrivateKey privateKey;
 
-	private Cipher encryptionCipher;
-	private Cipher decryptionCipher;
+	/**
+	 * The ciphers.
+	 */
+	public Cipher encryptionCipher;
+	public Cipher decryptionCipher;
 
 	/**
 	 * Creates a new EncryptionUtil instance.<br/>
@@ -46,9 +49,9 @@ public class EncryptionUtil {
 	 * new EncryptionUtil("RSA", 2048)
 	 * </code>
 	 *
-	 * @see EncryptionUtil#EncryptionUtil(String, int)
+	 * @see AsymmetricalEncryptionUtil#AsymmetricalEncryptionUtil(String, int)
 	 */
-	public EncryptionUtil() {
+	public AsymmetricalEncryptionUtil() {
 		this("RSA", 2048);
 	}
 
@@ -60,7 +63,7 @@ public class EncryptionUtil {
 	 * @throws IllegalStateException If the KeyPairGenerator failed for any reason.
 	 * @throws IllegalStateException If the cipher failed to generate.
 	 */
-	public EncryptionUtil(String algorithm, int bits) {
+	public AsymmetricalEncryptionUtil(String algorithm, int bits) {
 
 		KeyPairGenerator kpg = null;
 
@@ -123,7 +126,7 @@ public class EncryptionUtil {
 	 * @throws IllegalArgumentException If the keys in the key pair do not use the same algorithm.
 	 * @throws IllegalStateException    If the cipher failed to generate.
 	 */
-	public EncryptionUtil(KeyPair keyPair) {
+	public AsymmetricalEncryptionUtil(KeyPair keyPair) {
 
 		this.publicKey = keyPair.getPublic();
 		this.privateKey = keyPair.getPrivate();
