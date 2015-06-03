@@ -1,4 +1,6 @@
-package sockets;
+package sockets.tcp;
+
+import sockets.Packet;
 
 import java.io.DataInputStream;
 import java.io.IOException;

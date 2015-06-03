@@ -1,4 +1,8 @@
-package sockets;
+package sockets.tcp;
+
+import sockets.Packet;
+import sockets.PacketReadHandler;
+import sockets.PacketRegistrator;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SocketManager {
 
@@ -24,7 +27,7 @@ public class SocketManager {
 
 		this.packetListener = packetListener;
 
-		List<Method> methods = new ArrayList<>();
+		ArrayList<Method> methods = new ArrayList<>();
 
 		for (Method m : this.packetListener.getClass().getMethods()) {
 

@@ -1,13 +1,14 @@
-package sockets.test;
+package sockets.udp.test;
 
 import sockets.PacketRegistrator;
-import sockets.SocketManager;
+import sockets.test.Packet0Echo;
+import sockets.test.SocketPacketListener;
+import sockets.udp.UDPManager;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.InetSocketAddress;
 
-public class SocketTest {
+public class UDPTest {
 
 	public static void main(String[] args) {
 
@@ -23,11 +24,13 @@ public class SocketTest {
 
 		SocketPacketListener packetListener = new SocketPacketListener();
 
+		InetSocketAddress socketAddress = new InetSocketAddress("localhost", 4234);
+
 		try {
 
-			SocketManager socketManager = new SocketManager(packetListener, registrator, new Socket(InetAddress.getLocalHost(), 42834));
+			UDPManager manager = new UDPManager(packetListener, registrator, 1024, 4235);
 
-			socketManager.writeThread.sendPacket(new Packet0Echo("Hi there!"));
+			manager.writeThread.sendPacket(socketAddress, new Packet0Echo("Hi there!"));
 
 			try {
 
@@ -37,11 +40,13 @@ public class SocketTest {
 				e.printStackTrace();
 			}
 
-			socketManager.disconnect();
+			manager.stopNetworking();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		System.exit(0);
 
 	}
 
