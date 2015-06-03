@@ -73,7 +73,6 @@ public class UDPWriteThread extends Thread {
 
 				while ((packet = queue.poll()) != null) {
 
-					System.out.println("Send data: " + new String(packet.getData()));
 					this.manager.socket.send(packet);
 
 				}
